@@ -1,17 +1,16 @@
-import adapter from '@sveltejs/adapter-auto';
-import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+// svelte.config.js
+import adapter from '@sveltejs/adapter-static'; // <-- CAMBIO AQUÍ
 
-/** @type {import('@sveltejs/kit').Config} */
+// ... resto de imports ...
+
 const config = {
-	// Consult https://svelte.dev/docs/kit/integrations
-	// for more information about preprocessors
-	preprocess: vitePreprocess(),
-
+	// ...
 	kit: {
-		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-		adapter: adapter()
+		// Reemplaza @sveltejs/adapter-auto por el adaptador estático
+		adapter: adapter({
+			// Esto asegura que se construyan archivos HTML completos para cada ruta
+			fallback: 'index.html' // Necesario para el enrutamiento de SvelteKit en hosting estático
+		})
 	}
 };
 

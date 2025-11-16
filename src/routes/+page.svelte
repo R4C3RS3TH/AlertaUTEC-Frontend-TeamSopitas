@@ -9,8 +9,7 @@
 	let error = '';
 	let loading = false;
 
-	const LOGIN_API_URL = 'https://gmcf6yyt66.execute-api.us-east-1.amazonaws.com/login';
-
+	const LOGIN_API_URL = import.meta.env.VITE_API_REST_URL + '/login';
 	async function handleLogin() {
 		loading = true;
 		error = '';

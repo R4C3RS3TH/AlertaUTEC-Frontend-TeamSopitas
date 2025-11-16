@@ -29,7 +29,7 @@
 			return;
 		}
 
-		const REGISTER_API_URL = 'https://gmcf6yyt66.execute-api.us-east-1.amazonaws.com/register';
+		const REGISTER_API_URL = import.meta.env.VITE_API_REST_URL + '/register';
 
 		try {
 			const response = await fetch(REGISTER_API_URL, {
