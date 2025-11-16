@@ -1,26 +1,38 @@
-<script>
-	// Esta es tu página principal (homepage)
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { auth } from '$lib/stores/auth';
+	import Header from '$lib/components/layout/Sidebar.svelte';
+
+	// --- 👇 ¡CORRECCIÓN! Usamos 'Incidentes' con I mayúscula para coincidir con tu carpeta ---
+	import StudentChatView from '$lib/components/Incidentes/StudentChatView.svelte';
+	import AdminIncidentFeed from '$lib/components/Incidentes/AdminIncidentFeed.svelte';
+
+	import { mockIncidents } from '$lib/mocks/incidents.js';
+
+	// Definimos los tipos
+	type IncidentStatusType = 'pendiente' | 'en_atencion' | 'resuelto';
+	type Incident = (typeof mockIncidents)[0] & {
+		estado: IncidentStatusType;
+	};
+	let incidents: Incident[] = [];
+	let userRole: 'estudiante' | 'admin' | 'autoridad' | string | null = null;
+	// En dashboard/+page.svelte:
+	auth.subscribe((value) => {
+		// CORRECCIÓN: Accedemos al campo 'rol' (el que viene del backend)
+		userRole = value.user?.rol ?? null;
+	});
+
+	onMount(() => {
+		incidents = mockIncidents as Incident[];
+	});
 </script>
 
-<div class="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-8 text-center">
-	<img src="/logo.png" alt="Logo UTEC" class="mb-8 w-48" />
+<div class="flex h-screen flex-col">
+	<Header />
 
-	<h1 class="mb-4 text-4xl font-bold text-gray-900">Bienvenido a Alerta UTEC</h1>
-	<p class="mb-12 text-xl text-gray-600">Plataforma de reporte de incidentes del campus.</p>
-
-	<div class="flex w-full max-w-xs flex-col gap-4 sm:flex-row">
-		<a
-			href="/reportar"
-			class="w-full rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-md transition-colors hover:bg-blue-700"
-		>
-			Reportar un Incidente
-		</a>
-
-		<a
-			href="/admin/dashboard"
-			class="w-full rounded-lg bg-gray-700 px-6 py-3 font-semibold text-white shadow-md transition-colors hover:bg-gray-800"
-		>
-			Panel Admin (Simulación)
-		</a>
-	</div>
+	{#if userRole === 'estudiante'}
+		<StudentChatView {incidents} />
+	{:else if userRole}
+		<AdminIncidentFeed {incidents} role={userRole} />
+	{/if}
 </div>

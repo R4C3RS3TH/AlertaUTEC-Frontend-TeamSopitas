@@ -1,20 +1,19 @@
 <script>
 	import Button from '$lib/components/ui/Button.svelte';
-	import { goto } from '$app/navigation'; // Para redirigir
+	import { goto } from '$app/navigation';
+	// 👇 NECESITAMOS IMPORTAR EL STORE PARA PODER USAR '$auth'
+	import { auth } from '$lib/stores/auth.ts';
 
-	// Variables para el formulario
 	let email = '';
 	let password = '';
 	let error = '';
 	let loading = false;
 
-	// --- FUNCIÓN DE LOGIN (SIN NADA DE 'AnimatedBackground') ---
+	const LOGIN_API_URL = 'https://gmcf6yyt66.execute-api.us-east-1.amazonaws.com/login';
+
 	async function handleLogin() {
 		loading = true;
 		error = '';
-
-		// URL del endpoint que tus compañeros crearán en API Gateway
-		const LOGIN_API_URL = 'https://tu-api-gateway.com/prod/login'; // <-- URL de ejemplo
 
 		try {
 			const response = await fetch(LOGIN_API_URL, {
@@ -23,7 +22,7 @@
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					email: email,
+					correo: email,
 					password: password
 				})
 			});
@@ -31,16 +30,24 @@
 			const data = await response.json();
 
 			if (!response.ok) {
-				error = data.message || 'Credenciales incorrectas.';
+				error = data.message || 'Credenciales inválidas.';
 				loading = false;
 				return;
 			}
 
-			if (data.token) {
-				localStorage.setItem('authToken', data.token);
-				goto('/dashboard');
+			const token = data.token;
+
+			if (token) {
+				// 1. Guardamos el token
+				localStorage.setItem('authToken', token);
+
+				// 2. FORZAMOS LA CARGA DEL STORE (Esto activa el bloque '$: if ($auth.token)')
+				auth.loadUser();
+
+				// 3. QUITAMOS EL GOTO Y EL TIMEOUT. El bloque reactivo hará la redirección.
 			} else {
-				error = 'No se recibió un token del servidor.';
+				error = 'Error en el servidor: Token no recibido.';
+				loading = false;
 			}
 		} catch (err) {
 			console.error('Error de red:', err);
@@ -48,9 +55,28 @@
 			loading = false;
 		}
 	}
+
+	// --- 👇 SOLUCIÓN DEFINITIVA AL CONFLICTO DE TIEMPO 👇 ---
+	// Svelte ejecutará esto automáticamente cada vez que el valor de $auth.token cambie.
+	// Esto garantiza que la redirección sea el último paso reactivo.
+	$: if ($auth.token) {
+		// Solo redirige si estamos en la página de login (la raíz /)
+		if (typeof window !== 'undefined' && window.location.pathname === '/') {
+			goto('/dashboard');
+		}
+	}
+	// --- ----------------------------------------------- ---
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+<div
+	class="flex min-h-screen flex-col items-center justify-center bg-cover bg-center px-4 py-8"
+	style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/fondo.jpg')"
+>
+	<h1 class="animate-pulse-alert mb-1 text-center text-6xl font-extrabold text-white">
+		Alerta UTEC
+	</h1>
+	<p class="mb-10 text-center text-lg text-gray-200">Plataforma de gestión de incidentes</p>
+
 	<div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
 		<img src="/logo.png" alt="Logo UTEC" class="mx-auto mb-8 w-40" />
 
@@ -104,3 +130,21 @@
 		</p>
 	</div>
 </div>
+
+<style lang="postcss">
+	@keyframes pulse-alert {
+		0%,
+		100% {
+			transform: scale(1);
+			opacity: 1;
+		}
+		50% {
+			transform: scale(1.02);
+			opacity: 0.95;
+		}
+	}
+
+	.animate-pulse-alert {
+		animation: pulse-alert 1s ease-in-out infinite;
+	}
+</style>
