@@ -4,7 +4,7 @@ import { browser } from '$app/environment';
 
 // Definimos la forma de tu usuario (basada en el JWT de tu backend)
 interface UserPayload {
-    email: string;
+    correo: string;
     rol: 'estudiante' | 'admin' | 'autoridad' | string; // 👈 CORRECCIÓN A 'rol'
     id: string;
     sub: string;

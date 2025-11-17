@@ -77,7 +77,7 @@
 	<p class="mb-10 text-center text-lg text-gray-200">Plataforma de gestión de incidentes</p>
 
 	<div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
-		<img src="/logo.png" alt="Logo UTEC" class="mx-auto mb-8 w-40" />
+		<img src="/logo1.png" alt="Logo UTEC" class="mx-auto mb-8 w-40" />
 
 		<h2 class="mb-6 text-center text-3xl font-bold text-gray-900">Iniciar Sesión</h2>
 

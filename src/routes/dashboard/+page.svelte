@@ -1,24 +1,25 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { auth } from '$lib/stores/auth';
+	// Nota: 'Header' es el alias que estás usando para Sidebar.svelte
 	import Header from '$lib/components/layout/Sidebar.svelte';
 
-	// --- 👇 ¡CORRECCIÓN! Usamos 'Incidentes' con I mayúscula para coincidir con tu carpeta ---
+	// Importamos los componentes de las vistas
 	import StudentChatView from '$lib/components/Incidentes/StudentChatView.svelte';
 	import AdminIncidentFeed from '$lib/components/Incidentes/AdminIncidentFeed.svelte';
 
 	import { mockIncidents } from '$lib/mocks/incidents.js';
 
-	// Definimos los tipos
+	// Definiciones de Tipos
 	type IncidentStatusType = 'pendiente' | 'en_atencion' | 'resuelto';
 	type Incident = (typeof mockIncidents)[0] & {
 		estado: IncidentStatusType;
 	};
 	let incidents: Incident[] = [];
 	let userRole: 'estudiante' | 'admin' | 'autoridad' | string | null = null;
-	// En dashboard/+page.svelte:
+
+	// Suscripción y Lógica de Carga de Datos
 	auth.subscribe((value) => {
-		// CORRECCIÓN: Accedemos al campo 'rol' (el que viene del backend)
 		userRole = value.user?.rol ?? null;
 	});
 
@@ -27,12 +28,24 @@
 	});
 </script>
 
-<div class="flex h-screen flex-col">
+<div class="flex h-screen bg-gray-900">
 	<Header />
 
-	{#if userRole === 'estudiante'}
-		<StudentChatView {incidents} />
-	{:else if userRole}
-		<AdminIncidentFeed {incidents} role={userRole} />
-	{/if}
+	<main class="flex-1 p-4 md:p-8">
+		<div class="flex h-full w-full flex-col">
+			<div class="mb-6 shrink-0"></div>
+
+			<div class="w-full flex-grow">
+				{#if userRole === 'estudiante'}
+					<StudentChatView {incidents} />
+				{:else if userRole}
+					<AdminIncidentFeed {incidents} role={userRole} />
+				{:else}
+					<div class="flex-grow p-8">
+						<h1 class="text-3xl font-bold text-white">Cargando...</h1>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</main>
 </div>

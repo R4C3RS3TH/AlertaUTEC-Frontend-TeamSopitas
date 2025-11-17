@@ -13,7 +13,9 @@
 	export let incidents: Incident[];
 </script>
 
-<div class="mx-auto flex h-full w-full max-w-xl flex-grow flex-col rounded-lg bg-white shadow-xl">
+<div
+	class="mx-auto flex h-full w-full max-w-xl flex-grow flex-col rounded-lg bg-gray-700 shadow-xl"
+>
 	<div class="flex-grow space-y-4 overflow-y-auto p-4">
 		{#each incidents as incident (incident.id)}
 			<IncidentBubble {incident} />
