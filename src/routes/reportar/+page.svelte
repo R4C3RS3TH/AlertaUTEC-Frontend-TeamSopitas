@@ -38,6 +38,11 @@
 			console.log('✅ WebSocket conectado para reportar incidentes.');
 			isConnected = true;
 			error = '';
+			const authMessage = {
+				action: 'authenticate',
+				token: $auth.token
+			};
+			ws?.send(JSON.stringify(authMessage));
 		};
 
 		ws.onerror = (e) => {
@@ -47,6 +52,7 @@
 
 		ws.onmessage = (event) => {
 			const response = JSON.parse(event.data);
+			console.log('Mensaje recibido:', response);
 			if (response.action === 'crearIncidenteSuccess') {
 				alert('¡Reporte enviado con éxito! ID: ' + response.incidenciaId);
 				goto('/dashboard'); // Redirige al dashboard
@@ -78,12 +84,11 @@
 		// Prepara el mensaje que espera la Lambda
 		const message = {
 			action: 'crearIncidente',
-			data: {
-				categoria, // Coincide con el backend
-				ubicacion,
-				descripcion,
-				urgencia // Coincide con el backend
-			}
+			viewId: 'view#main_list',
+			categoria, // Coincide con el backend
+			ubicacion,
+			descripcion,
+			urgencia // Coincide con el backend
 		};
 
 		try {
