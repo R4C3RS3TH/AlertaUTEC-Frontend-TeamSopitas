@@ -31,7 +31,7 @@
 <div class="flex h-screen bg-gray-900">
 	<Header />
 
-	<main class="flex-1 p-4 md:p-8">
+	<main class="flex-1 overflow-y-auto bg-gray-800 p-4 md:p-8">
 		<div class="flex h-full w-full flex-col">
 			<div class="mb-6 shrink-0"></div>
 
