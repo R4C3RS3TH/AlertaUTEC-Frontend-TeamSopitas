@@ -1,38 +1,30 @@
-# sv
+# AlertaUTEC Frontend — Team Sopitas
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+**AlertaUTEC** es la aplicación frontend desarrollada por **Team Sopitas** para gestionar alertas dentro de la comunidad UTEC.  
+Permite a los usuarios reportar incidentes, visualizar alertas activas y acceder a información relevante de seguridad.
 
-## Creating a project
+---
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 📚 Tecnologías utilizadas
 
-```sh
-# create a new project in the current directory
-npx sv create
+- **Svelte / SvelteKit**
+- **Vite**
+- **TypeScript** (si aplica)
+- **TailwindCSS**
+- **ESLint + Prettier**
 
-# create a new project in my-app
-npx sv create my-app
-```
+---
 
-## Developing
+## ⚙️ Configuración de entorno
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Para ejecutar el proyecto correctamente, debes crear un archivo **.env.local** en la raíz del proyecto con las siguientes variables:
 
-```sh
-npm run dev
+```bash
+# .env.local
+# Variables de entorno para el desarrollo local (localhost)
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+# 1. API REST (Para Login, Registro, etc.)
+VITE_API_REST_URL="https://po640jyce6.execute-api.us-east-1.amazonaws.com/"
 
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+# 2. API WebSocket (Para comunicación en tiempo real/chat)
+VITE_API_WS_URL="wss://w5fzfgzq43.execute-api.us-east-1.amazonaws.com/dev"
